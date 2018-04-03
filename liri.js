@@ -8,8 +8,9 @@ var keys = require('./keys.js');
 
 var Twitter = require('twitter');
 
-
 var Spotify = require("node-spotify-api")
+var spotify = new Spotify(keys.spotify);
+
 
 var userCommand = process.argv[2];
 var randomSearch;
@@ -25,20 +26,20 @@ var client = new Twitter(keys.twitter);
 // });
 
 switch (userCommand) {
-    case "my-tweets":
-        twitterCommand();
-        break;
-    case "spotify-this-song":
-        spotifyCommand();
-        break;
-    case "movie-this":
-        movieCommand();
-        break;
-    case "do-what-it-says":
-        randomText();
-        break;
-    default:
-        console.log('Whatcha want me to do?');
+  case "my-tweets":
+    twitterCommand();
+    break;
+  case "spotify-this-song":
+    spotifyCommand();
+    break;
+  case "movie-this":
+    movieCommand();
+    break;
+  case "do-what-it-says":
+    randomText();
+    break;
+  default:
+    console.log('Whatcha want me to do?');
 };
 
 function twitterCommand() {
@@ -65,6 +66,37 @@ function twitterCommand() {
       };
     }
   });
+};
+// SPOTIFY ----------------------------------------------------------------------------
+// This will show the following information about the song in your terminal/bash window
+// Artist(s)
+// The song's name
+// A preview link of the song from Spotify
+// The album that the song is from
 
+function spotifyCommand() {
+  var trackName;
+  // If no song is provided, default to "The Sign" by Ace of Base.
+  if (process.argv[3] === undefined && randomSearch === undefined) {
+      trackName = '"The Sign" by Ace of Base'
+  } else if (randomSearch !== undefined) {
+      trackName = randomSearch
+  } else {
+      trackName = process.argv[3];
+  };
+
+  var params = { type: 'track', query: trackName }
+  spotify.search(params, function (err, data) {
+      if (err) {
+          return console.log("Error: " + err);
+      }
+      console.log("------------------------------------\nSPOTIFY TRACKS: "+
+          "\nArtist........ " + data.tracks.items[0].artists[0].name +
+          "\nSong Name..... " + data.tracks.items[0].name +
+          "\nPreview Link.. " + data.tracks.items[0].href +
+          "\nAlbum......... " + data.tracks.items[0].album.name +
+          "\n-----------------------------------------");
+
+  });
 };
 
