@@ -25,7 +25,7 @@ if (inputReq === "do-what-it-says") {
     var dataArray = data.split(",");
     inputReq = dataArray[0];
     randomText = dataArray[1];
-    console.log(inputReq +" + "+ randomText);
+    log(inputReq +" + "+ randomText);
     sortReq();
   })
 };
@@ -38,7 +38,7 @@ function sortReq() {
     spotifyReq();
   } else if (inputReq === "movie-this"){
     omdbReq();
-  } else (console.log('Whatcha want me to do?'));
+  } else (log('Whatcha want me to do?'));
 };
 
 
@@ -53,7 +53,7 @@ function twitterReq() {
 
     if (!error) {
       for (i = 0; i < 20 && i < tweets.length; i++) {
-        console.log("-----------------------------------------" +
+        log("-----------------------------------------" +
           "\nTime/Date sent: " + tweets[i].created_at +
           "\nMessage: " + tweets[i].text);
       };
@@ -82,9 +82,9 @@ function spotifyReq() {
   var params = { type: 'track', query: trackName }
   spotify.search(params, function (err, data) {
     if (err) {
-      return console.log("Error: " + err);
+      return log("Error: " + err);
     }
-    console.log("-----------------------------------------\nSPOTIFY TRACKS: " +
+    log("-----------------------------------------\nSPOTIFY TRACKS: " +
       "\nArtist........ " + data.tracks.items[0].artists[0].name +
       "\nSong Name..... " + data.tracks.items[0].name +
       "\nPreview Link.. " + data.tracks.items[0].href +
@@ -121,7 +121,7 @@ function omdbReq() {
   // Request info from omdb api
   request("http://www.omdbapi.com/?t=" + title + "&y=&plot=short&apikey=trilogy", function (error, response, body) {
     if (!error && response.statusCode === 200) {
-      console.log("------------------------------------\nOMDB MOVIE INFO: " +
+      log("------------------------------------\nOMDB MOVIE INFO: " +
         "\nTitle................... " + JSON.parse(body).Title +
         "\nDate of release......... " + JSON.parse(body).Released +
         "\nIMDB Rating............. " + JSON.parse(body).imdbRating +
@@ -135,4 +135,9 @@ function omdbReq() {
   });
 };
 
-
+function log(message) {
+  console.log(message);
+  fs.appendFile('log.txt', message + "\n", function (err) {
+      if (err) console.log(err);
+  });
+};

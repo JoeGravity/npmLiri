@@ -1,0 +1,26 @@
+------------------------------------
+OMDB MOVIE INFO: 
+Title................... Radio
+Date of release......... 24 Oct 2003
+IMDB Rating............. 6.9
+Rotten Tomatoes Rating.. 36%
+Country where produced.. USA
+Language................ English
+Plot.................... The story of a high school coach and the developmentally challenged man who he took under his wing.
+Actors.................. Cuba Gooding Jr., Ed Harris, Alfre Woodard, S. Epatha Merkerson
+-----------------------------------------
+-----------------------------------------
+Time/Date sent: Fri Mar 30 14:58:17 +0000 2018
+Message: Hello World
+-----------------------------------------
+Time/Date sent: Fri Mar 30 14:57:54 +0000 2018
+Message: Good Friday
+-----------------------------------------
+Time/Date sent: Fri Mar 30 14:57:21 +0000 2018
+Message: Here I am
+-----------------------------------------
+Time/Date sent: Fri Mar 30 14:56:48 +0000 2018
+Message: Testing testing
+-----------------------------------------
+Time/Date sent: Fri Mar 30 14:56:25 +0000 2018
+Message: Weather in Mpls: https://t.co/jxkPYRZHGE
