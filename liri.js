@@ -18,13 +18,6 @@ var randomSearch;
 var client = new Twitter(keys.twitter);
 
 
-// var client = new Twitter({
-//   consumer_key: process.env.TWITTER_CONSUMER_KEY,
-//   consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-//   access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-//   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
-// });
-
 switch (userCommand) {
   case "my-tweets":
     twitterCommand();
@@ -41,6 +34,11 @@ switch (userCommand) {
   default:
     console.log('Whatcha want me to do?');
 };
+
+// TWITTER -------------------------------------------------------------------
+// 1. `node liri.js my-tweets`
+//    * This will show your last 20 tweets and when they were created at in your terminal/bash window.
+
 
 function twitterCommand() {
   // var params = {screen_name: 'nodejs'};
@@ -78,24 +76,24 @@ function spotifyCommand() {
   var trackName;
   // If no song is provided, default to "The Sign" by Ace of Base.
   if (process.argv[3] == undefined && randomSearch == undefined) {
-      trackName = '"The Sign" by Ace of Base'
+    trackName = '"The Sign" by Ace of Base'
   } else if (randomSearch !== undefined) {
-      trackName = randomSearch
+    trackName = randomSearch
   } else {
-      trackName = process.argv[3];
+    trackName = process.argv[3];
   };
 
   var params = { type: 'track', query: trackName }
   spotify.search(params, function (err, data) {
-      if (err) {
-          return console.log("Error: " + err);
-      }
-      console.log("------------------------------------\nSPOTIFY TRACKS: " +
-          "\nArtist........ " + data.tracks.items[0].artists[0].name +
-          "\nSong Name..... " + data.tracks.items[0].name +
-          "\nPreview Link.. " + data.tracks.items[0].href +
-          "\nAlbum......... " + data.tracks.items[0].album.name +
-          "\n-----------------------------------------");
+    if (err) {
+      return console.log("Error: " + err);
+    }
+    console.log("------------------------------------\nSPOTIFY TRACKS: " +
+      "\nArtist........ " + data.tracks.items[0].artists[0].name +
+      "\nSong Name..... " + data.tracks.items[0].name +
+      "\nPreview Link.. " + data.tracks.items[0].href +
+      "\nAlbum......... " + data.tracks.items[0].album.name +
+      "\n-----------------------------------------");
 
   });
 };
@@ -117,25 +115,52 @@ function spotifyCommand() {
 
 function movieCommand() {
   if (process.argv[3] == undefined && randomSearch == undefined) {
-      title = "Mr. Nobody"
+    title = "Mr. Nobody"
   } else if (randomSearch !== undefined) {
-      title = randomSearch
+    title = randomSearch
   } else {
-      title = process.argv[3];
+    title = process.argv[3];
   };
   // Request info from omdb api
   request("http://www.omdbapi.com/?t=" + title + "&y=&plot=short&apikey=trilogy", function (error, response, body) {
-      if (!error && response.statusCode === 200) {
-          console.log("------------------------------------\nOMDB MOVIE INFO: " +
-              "\nTitle................... " + JSON.parse(body).Title +
-              "\nDate of release......... " + JSON.parse(body).Released +
-              "\nIMDB Rating............. " + JSON.parse(body).imdbRating +
-              "\nRotten Tomatoes Rating.. " + JSON.parse(body).Ratings[1].Value +
-              "\nCountry where produced.. " + JSON.parse(body).Country +
-              "\nLanguage................ " + JSON.parse(body).Language +
-              "\nPlot.................... " + JSON.parse(body).Plot +
-              "\nActors.................. " + JSON.parse(body).Actors +
-              "\n-----------------------------------------");
-      };
+    if (!error && response.statusCode === 200) {
+      console.log("------------------------------------\nOMDB MOVIE INFO: " +
+        "\nTitle................... " + JSON.parse(body).Title +
+        "\nDate of release......... " + JSON.parse(body).Released +
+        "\nIMDB Rating............. " + JSON.parse(body).imdbRating +
+        "\nRotten Tomatoes Rating.. " + JSON.parse(body).Ratings[1].Value +
+        "\nCountry where produced.. " + JSON.parse(body).Country +
+        "\nLanguage................ " + JSON.parse(body).Language +
+        "\nPlot.................... " + JSON.parse(body).Plot +
+        "\nActors.................. " + JSON.parse(body).Actors +
+        "\n-----------------------------------------");
+    };
+  });
+};
+
+// 4. `node liri.js do-what-it-says` --------------------------------------------------------------------------------
+//    * Using the `fs` Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
+//      * It should run `spotify-this-song` for "I Want it That Way," as follows the text in `random.txt`.
+//      * Feel free to change the text in that document to test out the feature for other commands. 
+
+function randomText() {
+  fs.readFile('random.txt', 'utf-8', function read(err, data) {
+    var dataArr = data.split(",");
+    randomSearch = dataArr[1];
+
+    switch (dataArr[0]) {
+      case "my-tweets":
+        twitterCommand();
+        break;
+      case "spotify-this-song":
+        spotifyCommand();
+        break;
+      case "movie-this":
+        movieCommand();
+        break;
+      case "do-what-it-says":
+        // log();
+        break;
+    };
   });
 };
