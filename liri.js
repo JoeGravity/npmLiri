@@ -77,7 +77,7 @@ function twitterCommand() {
 function spotifyCommand() {
   var trackName;
   // If no song is provided, default to "The Sign" by Ace of Base.
-  if (process.argv[3] === undefined && randomSearch === undefined) {
+  if (process.argv[3] == undefined && randomSearch == undefined) {
       trackName = '"The Sign" by Ace of Base'
   } else if (randomSearch !== undefined) {
       trackName = randomSearch
@@ -90,7 +90,7 @@ function spotifyCommand() {
       if (err) {
           return console.log("Error: " + err);
       }
-      console.log("------------------------------------\nSPOTIFY TRACKS: "+
+      console.log("------------------------------------\nSPOTIFY TRACKS: " +
           "\nArtist........ " + data.tracks.items[0].artists[0].name +
           "\nSong Name..... " + data.tracks.items[0].name +
           "\nPreview Link.. " + data.tracks.items[0].href +
@@ -99,4 +99,43 @@ function spotifyCommand() {
 
   });
 };
+// OMDB --------------------------------------------------------------------------------
+// 3. `node liri.js movie-this '<movie name here>'`
+//    * This will output the following information to your terminal/bash window:
 
+//        * Title of the movie.
+//        * Year the movie came out.
+//        * IMDB Rating of the movie.
+//        * Rotten Tomatoes Rating of the movie.
+//        * Country where the movie was produced.
+//        * Language of the movie.
+//        * Plot of the movie.
+//        * Actors in the movie.
+
+//    * If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.' <http://www.imdb.com/title/tt0485947/>
+//    * You'll use the request package to retrieve data from the OMDB API. Like all of the in-class activities, the OMDB API requires an API key. You may use `trilogy`.
+
+function movieCommand() {
+  if (process.argv[3] == undefined && randomSearch == undefined) {
+      title = "Mr. Nobody"
+  } else if (randomSearch !== undefined) {
+      title = randomSearch
+  } else {
+      title = process.argv[3];
+  };
+  // Request info from omdb api
+  request("http://www.omdbapi.com/?t=" + title + "&y=&plot=short&apikey=trilogy", function (error, response, body) {
+      if (!error && response.statusCode === 200) {
+          console.log("------------------------------------\nOMDB MOVIE INFO: " +
+              "\nTitle................... " + JSON.parse(body).Title +
+              "\nDate of release......... " + JSON.parse(body).Released +
+              "\nIMDB Rating............. " + JSON.parse(body).imdbRating +
+              "\nRotten Tomatoes Rating.. " + JSON.parse(body).Ratings[1].Value +
+              "\nCountry where produced.. " + JSON.parse(body).Country +
+              "\nLanguage................ " + JSON.parse(body).Language +
+              "\nPlot.................... " + JSON.parse(body).Plot +
+              "\nActors.................. " + JSON.parse(body).Actors +
+              "\n-----------------------------------------");
+      };
+  });
+};
