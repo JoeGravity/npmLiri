@@ -11,45 +11,40 @@ var Twitter = require('twitter');
 var Spotify = require("node-spotify-api")
 var spotify = new Spotify(keys.spotify);
 
+
 var inputReq = process.argv[2];
 var randomText;
 
 var client = new Twitter(keys.twitter);
 
-// Call function to sort user input
-sortReq();
 
-// On do what it says input, read the random.txt file, then sort its input command
-if (inputReq === "do-what-it-says") {
-  fs.readFile('random.txt', 'utf-8', function eval(err, data) {
-    var dataArray = data.split(",");
-    inputReq = dataArray[0];
-    randomText = dataArray[1];
-    console.log(inputReq +" + "+ randomText);
-    sortReq();
-  })
-};
-
-// what to do with user input
-function sortReq() {
-  if (inputReq === "my-tweets"){
-    twitterReq()
-  } else if (inputReq === "spotify-this-song"){
+switch (inputReq) {
+  case "my-tweets":
+    twitterReq();
+    break;
+  case "spotify-this-song":
     spotifyReq();
-  } else if (inputReq === "movie-this"){
+    break;
+  case "movie-this":
     omdbReq();
-  } else (console.log('Whatcha want me to do?'));
+    break;
+  case "do-what-it-says":
+    randomReq();
+    break;
+  default:
+    console.log('Whatcha want me to do?');
 };
-
 
 // TWITTER -------------------------------------------------------------------
 // 1. `node liri.js my-tweets`
 //    * This will show your last 20 tweets and when they were created at in your terminal/bash window.
 
+
 function twitterReq() {
 
   var params = { screen_name: 'Joe Pfahl' };
   client.get('statuses/user_timeline', params, function (error, tweets, response) {
+
 
     if (!error) {
       for (i = 0; i < 20 && i < tweets.length; i++) {
@@ -60,7 +55,6 @@ function twitterReq() {
     }
   });
 };
-
 // SPOTIFY ----------------------------------------------------------------------------
 // This will show the following information about the song in your terminal/bash window
 // Artist(s)
@@ -93,7 +87,6 @@ function spotifyReq() {
 
   });
 };
-
 // OMDB --------------------------------------------------------------------------------
 // 3. `node liri.js movie-this '<movie name here>'`
 //    * This will output the following information to your terminal/bash window:
@@ -135,4 +128,53 @@ function omdbReq() {
   });
 };
 
+// 4. `node liri.js do-what-it-says` --------------------------------------------------------------------------------
+//    * Using the `fs` Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
+//      * It should run `spotify-this-song` for "I Want it That Way," as follows the text in `random.txt`.
+//      * Feel free to change the text in that document to test out the feature for other commands. 
+
+// function randomReq() {
+//   fs.readFile('random.txt', 'utf-8', function eval(err, data) {
+//     var dataArray = data.split(",");
+//     randomSearch = dataArray[1];
+
+//     switch (dataArray[0]) {
+//       case "my-tweets":
+//         twitterReq();
+//         break;
+//       case "spotify-this-song":
+//         spotifyReq();
+//         break;
+//       case "movie-this":
+//         omdbReq();
+//         break;
+//       case "do-what-it-says":
+//         // log();
+//         break;
+//     };
+//   });
+// };
+
+
+function randomReq() {
+  fs.readFile('random.txt', 'utf-8', function eval(err, data) {
+    var dataArray = data.split(",");
+    randomText = dataArray[1];
+
+    switch (dataArray[0]) {
+      case "my-tweets":
+        twitterReq();
+        break;
+      case "spotify-this-song":
+        spotifyReq();
+        break;
+      case "movie-this":
+        omdbReq();
+        break;
+      case "do-what-it-says":
+        // log();
+        break;
+    };
+  });
+};
 
